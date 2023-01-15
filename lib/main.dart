@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/routes/app_routes.dart';
+import 'package:todo/screens/edit_screen/edit_provider.dart';
+import 'package:todo/screens/home_screen/home_provider.dart';
 
 import 'screens/splash_screen/splash_page.dart';
 
-
-enum PageTransitionType {
-  fade,
-  rightToLeft,
-  leftToRight,
-  upToDown,
-  downToUp,
-  scale,
-  rotate,
-  size,
-  rightToLeftWithFade,
-  leftToRightWithFade,
-}
-
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => HomeProvider()),
+    ChangeNotifierProvider(create: (_) => EditProvider()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -26,8 +20,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: SplashPage(),
-    );
+    return GetMaterialApp(
+        home: const SplashPage(), getPages: AppRoutes().pages);
   }
 }
