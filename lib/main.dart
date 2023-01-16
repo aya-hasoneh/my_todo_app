@@ -21,6 +21,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        home: const SplashPage(), getPages: AppRoutes().pages);
+        home: const SplashPage(), getPages: AppRoutes().pages,
+
+    );
   }
 }

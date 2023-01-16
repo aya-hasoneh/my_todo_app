@@ -41,6 +41,7 @@ dependencies:
   lottie: ^1.4.2
   percent_indicator: ^4.2.2
   shared_preferences: ^2.0.16
+  animated_list_item: ^0.0.1
 
 
 dev_dependencies:

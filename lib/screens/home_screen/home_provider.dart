@@ -42,6 +42,9 @@ class HomeProvider extends ChangeNotifier {
 
     notifyListeners();
   }
-
+  updateTodo(Todo todo, String title) {
+    todo.title = title;
+    notifyListeners();
+  }
 
 }
