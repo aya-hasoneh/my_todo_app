@@ -1,50 +1,39 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:todo/modules/todo_model.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:todo/modules/todo.dart';
+import 'package:todo/utls/boxes.dart';
 
 class HomeProvider extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   String title = '';
   String description = '';
-
-  List<Todo> todos = [
-    Todo(
-      createdTime: DateTime.now(),
-      title: 'go to shopping',
-    ),
-    Todo(
-      createdTime: DateTime.now(),
-      title: 'clean my room',
-    ),
-    Todo(
-      createdTime: DateTime.now(),
-      title: 'study ',
-    ),
-    Todo(
-      createdTime: DateTime.now(),
-      title: 'sports',
-    ),
-  ];
-  List<Todo> get todo => todos.where((todo) => todo.isDone == false).toList();
-  addTodo(Todo todo) {
-    todos.add(todo);
+  final List<Todo> todos = [];
+  Future addTodo(String title) async {
+    final todo = Todo()..title = title;
+    final box = Boxes.getTodo();
+    box.add(todo);
+    Get.back();
     notifyListeners();
   }
 
-  bool  doneTodo(Todo todo) {
-    todo.isDone = !todo.isDone;
-    notifyListeners();
-
-    return todo.isDone;
-  }
-
- void removeTodo(Todo todo) {
-    todos.remove(todo);
-
-    notifyListeners();
-  }
-  updateTodo(Todo todo, String title) {
+  editTodo(Todo todo, String title) {
     todo.title = title;
+    todo.save();
     notifyListeners();
   }
 
+  bool doneTodo(Todo todo) {
+    todo.isDone = !todo.isDone!;
+    notifyListeners();
+
+    return todo.isDone!;
+  }
+
+  removeTodo(Todo todos) {
+    todos.delete();
+    notifyListeners();
+  }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
-import 'package:todo/modules/todo_model.dart';
+import 'package:todo/modules/todo.dart';
 import 'package:todo/screens/home_screen/home_provider.dart';
 import 'package:todo/utls/color.dart';
 import 'package:todo/widgets/form_widget.dart';
@@ -35,7 +35,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
       ),
       leading: widget.isShowArrowBack
           ? IconButton(
-              onPressed: () {Get.back();},
+              onPressed: () {
+                Get.back();
+              },
               icon: const Icon(
                 Icons.arrow_back_ios,
                 color: CustomColor.lightPurple,
@@ -48,15 +50,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   Get.defaultDialog(
                     title: 'Add your task',
                     middleText: '',
-                    content: Form(
-                      key: homeProvider.formKey,
-                      child: FormWidget(
+                    content: FormWidget(
                         onChangedTitle: (title) => {
-                          homeProvider.title = title,
-                        },
-                        onSaved: addTodo,
-                      ),
-                    ),
+                              homeProvider.title = title,
+                            },
+                        onSaved: () {
+                         homeProvider.addTodo(homeProvider.title);
+                        }),
                   );
                 },
                 icon: const Icon(
@@ -70,25 +70,5 @@ class _CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
-  void addTodo() {
-    final isValid = Provider.of<HomeProvider>(context, listen: false)
-        .formKey
-        .currentState!
-        .validate();
 
-    if (!isValid) {
-      return;
-    } else {
-      final todo = Todo(
-        id: DateTime.now().toString(),
-        title: Provider.of<HomeProvider>(context, listen: false).title,
-        createdTime: DateTime.now(),
-      );
-
-      final provider = Provider.of<HomeProvider>(context, listen: false);
-      provider.addTodo(todo);
-
-      Get.back();
-    }
-  }
 }

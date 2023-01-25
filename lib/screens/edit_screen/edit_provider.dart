@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:todo/modules/todo_model.dart';
+import 'package:todo/modules/todo.dart';
 
 class EditProvider extends ChangeNotifier {
-  updateTodo(Todo todo, String title) {
+  final formKey = GlobalKey<FormState>();
+  String title = '';
+  editTodo(Todo todo, String title) {
     todo.title = title;
+    todo.save();
     notifyListeners();
   }
 }

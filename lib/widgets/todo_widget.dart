@@ -3,22 +3,37 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:provider/provider.dart';
-import 'package:todo/modules/todo_model.dart';
-import 'package:todo/routes/app_links.dart';
+import 'package:todo/modules/todo.dart';
 import 'package:todo/screens/edit_screen/edit_page.dart';
 import 'package:todo/screens/edit_screen/edit_provider.dart';
 import 'package:todo/screens/home_screen/home_provider.dart';
 import 'package:todo/utls/color.dart';
+import 'package:todo/widgets/form_widget.dart';
 
 class ToDo extends StatelessWidget {
-  final Todo todo;
-
-  const ToDo({super.key, required this.todo});
+  List<Todo> todo;
+  ToDo({super.key, required this.todo});
 
   @override
   Widget build(BuildContext context) {
     final homeProvider = Provider.of<HomeProvider>(context, listen: false);
-    final editProvider = Provider.of<EditProvider>(context, listen: false);
+
+    return Container(
+      height: 500,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+          itemCount: todo.length,
+          itemBuilder: (context, index) {
+            //final todo = todo[index];
+            return buildCard(context, todo[index]);
+          }),
+    );
+  }
+
+  buildCard(
+    BuildContext context,
+    Todo todo,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
       child: Container(
@@ -39,7 +54,7 @@ class ToDo extends StatelessWidget {
         child: Row(
           children: [
             IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.done,
                 color: CustomColor.darkGreen,
               ),
@@ -50,23 +65,30 @@ class ToDo extends StatelessWidget {
                   snackPosition: SnackPosition.BOTTOM,
                   backgroundColor: CustomColor.darkGreen,
                 );
-                homeProvider.doneTodo(todo);
+                Provider.of<HomeProvider>(context).doneTodo(todo);
               },
             ),
             Center(child: Text('${todo.title}')),
             Expanded(child: Container()),
+
             IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>  EditTodoPage(todo: todo)),
-                  );
-                 // editProvider.updateTodo(tod odo.title);
-                },
-                icon: const Icon(
-                  Icons.edit,
-                  color: CustomColor.darkBlue,
-                )),
+              onPressed: () {
+
+                Get.to(EditTodoPage(
+                  todo: todo,
+                ));
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => EditTodoPage(todo: todo)),
+                // );
+                //  Provider.of<EditProvider>(context).editTodo(todo, todo.title!);
+              },
+              icon: const Icon(
+                Icons.edit,
+                color: CustomColor.darkBlue,
+              ),
+            ),
             IconButton(
                 onPressed: () {
                   Get.snackbar(
@@ -75,7 +97,8 @@ class ToDo extends StatelessWidget {
                     snackPosition: SnackPosition.BOTTOM,
                     backgroundColor: CustomColor.darkRed,
                   );
-                  homeProvider.removeTodo(todo);
+                  Provider.of<HomeProvider>(context, listen: false)
+                      .removeTodo(todo);
                 },
                 icon: const Icon(Icons.close, color: CustomColor.darkRed)),
           ],
